@@ -1,19 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+import Loader from './components/Loader.js'
+import Home from './views/Home.js'
+
 import './App.css';
 
 class App extends Component {
+  constructor() {
+    super()
+    this.getJobs = this.getJobs.bind(this)
+    this.state = {
+      page: 0,
+      location: '',
+      jobs: []
+    }
+  }
+
+  componentDidMount() {
+    this.getJobs()
+  }
+
+  getJobs () {
+    return fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
+    .then(res => {
+      res.json()
+      .then(data => {
+        this.setState({jobs: data})
+      })
+    })
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <Router>
+        <div className="App">
+          {this.state.jobs.length < 1 &&
+            <Loader />}
+          <Route exact path="/" component={Home} jobs={this.state.jobs} />
+        </div>
+      </Router>
     );
   }
 }
