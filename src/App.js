@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Link
-} from 'react-router-dom'
+import { Route } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
+import { setJobs } from './actions'
 import Loader from './components/Loader.js'
-import Home from './views/Home.js'
-
+import Home from './views/Home'
+import JobDetails from './views/JobDetails'
 import './App.css';
 
+const mapStateToProps = state => ({
+  jobs: state.jobs
+})
 class App extends Component {
   constructor() {
     super()
@@ -16,7 +18,6 @@ class App extends Component {
     this.state = {
       page: 0,
       location: '',
-      jobs: []
     }
   }
 
@@ -29,22 +30,21 @@ class App extends Component {
     .then(res => {
       res.json()
       .then(data => {
-        this.setState({jobs: data})
+        this.props.dispatch(setJobs(data))
       })
     })
   }
 
   render() {
     return (
-      <Router>
-        <div className="App">
-          {this.state.jobs.length < 1 &&
-            <Loader />}
-          <Route exact path="/" component={Home} jobs={this.state.jobs} />
-        </div>
-      </Router>
+      <div className="App">
+      {this.props.jobs.length < 1 &&
+        <Loader />}
+        <Route exact path="/" component={Home} />
+        <Route path="/offer/:id" component={JobDetails} />
+      </div>
     );
   }
 }
 
-export default App;
+export default withRouter(connect(mapStateToProps)(App))
