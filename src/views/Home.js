@@ -1,14 +1,18 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import JobCard from '../components/JobCard.js'
 import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = state => ({
-  jobs: state.jobs.jobs
+  jobs: state.jobs
 })
 class Home extends React.Component {
-  componentDidMount() {
-    console.log('Home', this.props)
+  static defaultProps = {
+    jobs: []
+  }
+  static propTypes = {
+    jobs: PropTypes.array
   }
   render() {
     return (

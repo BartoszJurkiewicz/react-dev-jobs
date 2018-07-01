@@ -1,22 +1,44 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { setActiveJob } from '../actions'
 
 const mapStateToProps = (state, ownProps) => ({
   jobData: state.jobs.find(job => { return job.id === ownProps.match.params.id })
 })
 
 class JobDetails extends React.Component {
-  componentDidMount() {
-    console.log('Details', this.props)
+  static defaultProps = {
+    jobData: {
+      id: '',
+      title: '',
+      company: '',
+      location: '',
+      type: '',
+      description: ''
+    }
   }
-  componentDidUpdate() {
-    console.log('Details', this.props)
+  static propTypes = {
+    jobData: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      company: PropTypes.string.isRequired,
+      location: PropTypes.string.isRequired,
+    })
   }
   render () {
     return (
       <section className="job-details">
-        details for job
+        {this.props.jobData.hasOwnProperty('id') ?
+        <div>
+          <p>{this.props.jobData.id}</p>
+          <p>{this.props.jobData.title}</p>
+          <p>{this.props.jobData.company}</p>
+          <p>{this.props.jobData.location}</p>
+          <p>{this.props.jobData.type}</p>
+          <p>{this.props.jobData.description}</p>
+        </div>
+        : <p>Trwa pobieranie danych...</p>      
+        }
       </section>
     )
   }
