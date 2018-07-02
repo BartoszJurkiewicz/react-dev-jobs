@@ -22,11 +22,17 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.getJobs()
+    try {
+      this.getJobs()
+    }
+    catch(err) {
+      console.log(err)
+    }
   }
 
-  getJobs () {
-    return fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
+  async getJobs () {
+    console.log('getting jobs data')
+    await fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
     .then(res => {
       res.json()
       .then(data => {
