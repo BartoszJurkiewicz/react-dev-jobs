@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 const mapStateToProps = (state, ownProps) => ({
   jobData: state.jobs.find(job => { return job.id === ownProps.match.params.id })
@@ -27,19 +29,25 @@ class JobDetails extends React.Component {
   }
   render () {
     return (
-      <section className="job-details">
-        {this.props.jobData.hasOwnProperty('id') ?
-        <div>
-          <p>{this.props.jobData.id}</p>
-          <p>{this.props.jobData.title}</p>
-          <p>{this.props.jobData.company}</p>
-          <p>{this.props.jobData.location}</p>
-          <p>{this.props.jobData.type}</p>
-          <p>{this.props.jobData.description}</p>
-        </div>
-        : <p>Trwa pobieranie danych...</p>      
-        }
-      </section>
+      <Grid container spacing={24}>
+        <Grid item xs={12}>
+          <Paper>
+            <section className="job-details">
+              {this.props.jobData.hasOwnProperty('id') ?
+              <div>
+                <p>{this.props.jobData.id}</p>
+                <p>{this.props.jobData.title}</p>
+                <p>{this.props.jobData.company}</p>
+                <p>{this.props.jobData.location}</p>
+                <p>{this.props.jobData.type}</p>
+                <p dangerouslySetInnerHTML={{__html: this.props.jobData.description}}></p>
+              </div>
+              : <p>Getting job data...</p>      
+              }
+            </section>
+          </Paper>
+        </Grid>
+      </Grid>
     )
   }
 }

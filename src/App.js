@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { setJobs } from './actions'
-import Loader from './components/Loader.js'
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Home from './views/Home'
 import JobDetails from './views/JobDetails'
 import './App.css';
@@ -11,7 +11,7 @@ import './App.css';
 const mapStateToProps = state => ({
   jobs: state.jobs
 })
-class App extends Component {
+class App extends React.Component {
   constructor() {
     super()
     this.getJobs = this.getJobs.bind(this)
@@ -22,31 +22,30 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.getJobs()
+  }
+
+  async getJobs () {
     try {
-      this.getJobs()
-    }
-    catch(err) {
+      const res = await fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
+      res.json()
+      .then(data => {
+        this.props.dispatch(setJobs(data))
+      })
+    } catch(err) {
       console.log(err)
     }
   }
 
-  async getJobs () {
-    console.log('getting jobs data')
-    await fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
-    .then(res => {
-      res.json()
-      .then(data => {
-        console.log(data)
-        this.props.dispatch(setJobs(data))
-      })
-    })
+  logUp () {
+    console.log('pageUp')
   }
 
   render() {
     return (
       <div className="App">
       {this.props.jobs.length < 1 &&
-        <Loader />}
+        <CircularProgress size={50} />}
         <Route exact path="/" component={Home} />
         <Route path="/offer/:id" component={JobDetails} />
       </div>
