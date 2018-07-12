@@ -1,5 +1,5 @@
-export const setJobs = jobs => ({
-  type: 'SET_JOBS',
+export const addJobs = jobs => ({
+  type: 'ADD_JOBS',
   jobs
 })
 

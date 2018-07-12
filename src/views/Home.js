@@ -10,13 +10,13 @@ const mapStateToProps = state => ({
 })
 class Home extends React.Component {
   static defaultProps = {
-    jobs: []
+    jobs: [],
   }
   static propTypes = {
     jobs: PropTypes.array
   }
   componentDidMount() {
-    console.log(this.props)
+    console.log(this.props.route)
   }
   render() {
     return (
@@ -24,17 +24,19 @@ class Home extends React.Component {
         <Grid container className="jobs-list" justify="center">
           <Grid item xs={6}>
             <Grid container spacing={24}>
-              {/* {this.props.jobs.map(job =>
-                <JobCard key={job.id} jobData={job} />
-              )} */}
+              {
+                this.props.jobs.map(job =>
+                  <JobCard key={job.id} jobData={job} />
+                )
+              }
             </Grid>
           </Grid>
-          {/* {
+          {
             this.props.jobs.length > 1 &&
-            <Grid item xs={12}>
-              <Button onClick={this.props.onPageUp}>Load more</Button>
-            </Grid>
-          } */}
+              <Grid item xs={12}>
+                <Button onClick={this.props.onPageUp}>Load more</Button>
+              </Grid>
+          }
         </Grid>
       </main>
     )

@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { setJobs } from './actions'
+import { addJobs } from './actions'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Home from './views/Home'
 import JobDetails from './views/JobDetails'
@@ -15,7 +15,9 @@ class App extends React.Component {
   constructor() {
     super()
     this.getJobs = this.getJobs.bind(this)
+    this.pageUp = this.pageUp.bind(this)
     this.state = {
+      loader: true,
       page: 0,
       location: '',
     }
@@ -30,23 +32,30 @@ class App extends React.Component {
       const res = await fetch(`http://jobs.github.com/positions.json?page=${this.state.page}`)
       res.json()
       .then(data => {
-        this.props.dispatch(setJobs(data))
+        this.props.dispatch(addJobs(data))
+        this.setState({loader: false})
       })
     } catch(err) {
       console.log(err)
     }
   }
 
-  logUp () {
-    console.log('pageUp')
+  pageUp () {
+    this.setState({loader: true, page: this.state.page + 1}, () => {
+      this.getJobs()
+    })
   }
 
   render() {
     return (
       <div className="App">
-      {this.props.jobs.length < 1 &&
-        <CircularProgress size={50} />}
-        <Route exact path="/" component={Home} />
+      {
+        this.state.loader &&
+          <div className="App-loader-container">
+            <CircularProgress size={50} />
+          </div>
+      }
+        <Route path="/" render={props => (<Home onPageUp={this.pageUp} />)} />
         <Route path="/offer/:id" component={JobDetails} />
       </div>
     );
