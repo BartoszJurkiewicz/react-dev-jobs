@@ -1,28 +1,21 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import JobCard from '../components/JobCard.js'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import JobCard from '../components/JobCard.js'
+import FilterForm from '../components/FilterForm.js'
 
 const mapStateToProps = state => ({
   jobs: state.jobs
 })
 class Home extends React.Component {
-  static defaultProps = {
-    jobs: [],
-  }
-  static propTypes = {
-    jobs: PropTypes.array
-  }
-  componentDidMount() {
-    console.log(this.props.route)
-  }
   render() {
     return (
       <main className="jobs-container">
+        <FilterForm onFilterChange={this.props.onFilterChange}/>
         <Grid container className="jobs-list" justify="center">
-          <Grid item xs={6}>
+          <Grid item xs={10} lg={6}>
             <Grid container spacing={24}>
               {
                 this.props.jobs.map(job =>
@@ -41,6 +34,15 @@ class Home extends React.Component {
       </main>
     )
   }
+}
+
+Home.propTypes = {
+  jobs: PropTypes.array,
+  onFilterChange: PropTypes.func.isRequired
+}
+
+Home.defaultProps = {
+  jobs: []
 }
 
 export default connect(mapStateToProps)(Home)

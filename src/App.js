@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import { Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -12,14 +13,24 @@ const mapStateToProps = state => ({
   jobs: state.jobs
 })
 class App extends React.Component {
+  static defaultProps = {
+    jobs: [],
+  }
+  static propTypes = {
+    jobs: PropTypes.array
+  }
   constructor() {
     super()
     this.getJobs = this.getJobs.bind(this)
     this.pageUp = this.pageUp.bind(this)
+    this.onFilterChange = this.onFilterChange.bind(this)
     this.state = {
       loader: true,
       page: 0,
       location: '',
+      filters: {
+        text: ''
+      }
     }
   }
 
@@ -46,6 +57,12 @@ class App extends React.Component {
     })
   }
 
+  onFilterChange (name, value) {
+    this.setState({
+      filters: Object.assign({}, this.state.filters, {[name]: value})
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -55,7 +72,7 @@ class App extends React.Component {
             <CircularProgress size={50} />
           </div>
       }
-        <Route path="/" render={props => (<Home onPageUp={this.pageUp} />)} />
+        <Route path="/" render={props => (<Home onPageUp={this.pageUp} onFilterChange={this.onFilterChange} />)} />
         <Route path="/offer/:id" component={JobDetails} />
       </div>
     );
