@@ -7,85 +7,20 @@ import Home from './containers/Home'
 import JobDetails from './containers/JobDetails'
 import './App.css';
 class App extends React.Component {
-  static defaultProps = {
-    jobs: [],
-  }
-  static propTypes = {
-    jobs: PropTypes.array
-  }
   constructor() {
     super()
-    this.getJobs = this.getJobs.bind(this)
-    this.pageUp = this.pageUp.bind(this)
-    this.onFilterChange = this.onFilterChange.bind(this)
-    this.timeout = null
+    this.toggleLoader = this.toggleLoader.bind(this)
     this.state = {
-      loader: true,
-      page: 0,
-      location: '',
-      filters: {
-        search: ''
-      },
-      joinedFilters: () => {
-        return Object.keys(this.state.filters).map(key => {
-          return `${key}=${this.state.filters[key]}`
-        }).join('&')
-      },
-      query: () => `?page=${this.state.page}&${this.state.joinedFilters()}`
+      loader: true
     }
   }
 
-  componentDidMount() {
-    this.getJobs('set')
-  }
-
-  async getJobs (method) {
-    console.log(`${method}Jobs`)
-    try {
-      const res = await fetch(`http://jobs.github.com/positions.json${this.state.query()}`)
-      res.json()
-      .then(data => {
-        switch(method) {
-          case 'set':
-            this.props.dispatch(setJobs(data))
-            break
-          case 'add':
-            this.props.dispatch(addJobs(data))
-            break
-          default:
-            break
-        }
-        this.setState({loader: false})
-      })
-    } catch(err) {
-      console.log(err)
-    }
-  }
-
-  pageUp () {
+  toggleLoader() {
     this.setState({
-      loader: true,
-      page: this.state.page + 1,
-      // query: 
-    }, () => {
-      this.getJobs('add')
+      loader: !this.state.loader
     })
   }
-
-  
-  onFilterChange (name, value) {
-    clearTimeout(this.timeout)
-    this.timeout = setTimeout(() => {
-      this.setState({
-        page: 0,
-        loader: true,
-        filters: Object.assign({}, this.state.filters, {[name]: value})
-      }, () => {
-        this.getJobs('set')
-      })
-    }, 300)
-  }
-
+ 
   render() {
     return (
       <div className="App">
@@ -95,11 +30,19 @@ class App extends React.Component {
             <CircularProgress size={50} />
           </div>
       }
-        <Route exact path="/" render={props => (<Home onPageUp={this.pageUp} onFilterChange={this.onFilterChange} />)} />
+        <Route exact path="/" render={props => (<Home toggleLoader={this.toggleLoader} />)} />
         <Route path="/offer/:id" component={JobDetails} />
       </div>
     );
   }
+}
+
+App.propTypes = {
+  jobs: PropTypes.array
+}
+
+App.defaultProps = {
+  jobs: [],
 }
 
 export default App
