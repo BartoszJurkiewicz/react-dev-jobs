@@ -1,14 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import JobCard from '../components/JobCard.js'
 import FilterForm from '../components/FilterForm.js'
-
-const mapStateToProps = state => ({
-  jobs: state.jobs
-})
 class Home extends React.Component {
   render() {
     return (
@@ -45,4 +40,4 @@ Home.defaultProps = {
   jobs: []
 }
 
-export default connect(mapStateToProps)(Home)
+export default Home

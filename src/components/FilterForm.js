@@ -7,16 +7,11 @@ class FilterForm extends React.Component {
     super(props)
     this.handleTextChange = this.handleTextChange.bind(this)
     this.state = {
-      text: 'this is text'
+      search: 'this is text'
     }
   }
 
-  static defaultProps = {
-
-  }
-
   handleTextChange = name => e => {
-    console.log (name, e)
     this.setState({
       [name]: e.target.value
     }, () => {
@@ -27,7 +22,7 @@ class FilterForm extends React.Component {
   render () {
     return (
       <form>
-        <TextField label="Search" value={this.props.text} onChange={this.handleTextChange('text')} />
+        <TextField label="Search" value={this.props.text} onChange={this.handleTextChange('search')} />
       </form>
     )
   }

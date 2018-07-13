@@ -1,13 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
-const mapStateToProps = (state, ownProps) => ({
-  jobData: state.jobs.find(job => { return job.id === ownProps.match.params.id })
-})
-
 class JobDetails extends React.Component {
   static defaultProps = {
     jobData: {
@@ -52,4 +46,4 @@ class JobDetails extends React.Component {
   }
 }
 
-export default connect(mapStateToProps)(JobDetails)
+export default JobDetails
